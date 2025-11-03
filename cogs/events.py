@@ -30,6 +30,9 @@ class EventsCog(c.Cog):
     @reset_claims.before_loop
     async def before_reset_claims(self):
         await self.bot.wait_until_ready()
+
+    @reset_claims.after_loop
+    async def after_reset_claims(self):
         print(f"Starting claim reset scheduled task. Next reset: {self.reset_claims.next_iteration.timestamp()}")
 
 
