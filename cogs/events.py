@@ -18,7 +18,7 @@ class EventsCog(c.Cog):
 
         self.reset_claims.start()
         print(f"Daily claim reset task started.")
-        print(f"Next reset: {time.strftime('%H:%M:%S', self.reset_claims.next_iteration.utctimetuple())}")
+        print(f"Next reset: {self.reset_claims.next_iteration.timestamp()}")
 
     @c.Cog.listener()
     async def on_application_command(self, ctx: d.ApplicationContext):
@@ -28,7 +28,7 @@ class EventsCog(c.Cog):
 
     @tasks.loop(time = datetime.time(hour=0, minute=0, second=0, microsecond=0))
     async def reset_claims(self):
-        print(f"Claims have been reset. Next reset: {time.strftime('%H:%M:%S', self.reset_claims.next_iteration.utctimetuple())}")
+        print(f"Claims have been reset. Next reset: {self.reset_claims.next_iteration.timestamp()}")
 
 
 def setup(bot: d.Bot):
