@@ -8,7 +8,6 @@ from discord.ext import commands as c, tasks
 class EventsCog(c.Cog):
     def __init__(self, bot: d.Bot):
         self.bot = bot
-        self.reset_claims.start()
 
 
     @c.Cog.listener()
@@ -16,6 +15,10 @@ class EventsCog(c.Cog):
         print(
             f"Logged in as {self.bot.user} (ID: {self.bot.user.id if self.bot.user.id is not None else 'N/A'})"
         )
+
+        self.reset_claims.start()
+        print(f"Daily claim reset task started.")
+        print(f"Next reset: {time.strftime('%H:%M:%S', self.reset_claims.next_iteration.utctimetuple())}")
 
     @c.Cog.listener()
     async def on_application_command(self, ctx: d.ApplicationContext):
@@ -25,15 +28,7 @@ class EventsCog(c.Cog):
 
     @tasks.loop(time = datetime.time(hour=0, minute=0, second=0, microsecond=0))
     async def reset_claims(self):
-        print(f"Claims have been reset. Next reset: {self.reset_claims.next_iteration.timestamp()}")
-
-    @reset_claims.before_loop
-    async def before_reset_claims(self):
-        await self.bot.wait_until_ready()
-
-    @reset_claims.after_loop
-    async def after_reset_claims(self):
-        print(f"Starting claim reset scheduled task. Next reset: {self.reset_claims.next_iteration.timestamp()}")
+        print(f"Claims have been reset. Next reset: {time.strftime('%H:%M:%S', self.reset_claims.next_iteration.utctimetuple())}")
 
 
 def setup(bot: d.Bot):
